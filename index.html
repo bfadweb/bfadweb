@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8">
+	<title>Browser fingerprinting demonstration</title>
+   <link rel="stylesheet" href="css/styles.css">
+   <h1 style="color:red; font-size:30px;">This is a heading</h1>
+	<p style="color:green; font-size:22px;">This is a paragraph.</p>
+	<div style="color:blue; font-size:14px;">This is some text content.</div>
+
+  </head>
+  <header>
+    <h1>Browser fingerprinting demonstration</h1>
+    <p>Posted by John Doe</p>
+    <p>Some additional information here</p>
+  </header>
+  <body>
+	
+    <p>This is an example paragraph. Anything in the <strong>body</strong> tag will appear on the page, just like this <strong>p</strong> tag and its contents.</p>
+	<section>
+		<h2>Navigator</h2>
+		<script src="navigatorfp.js"></script>
+		<script>
+			var navigator_arr = new Array();
+			navigator_arr.push('Navigator.appVersion', 'Navigator.connection', 'Navigator.credentials', 'Navigator.geolocation', 'Navigator.getGamepads', 'Navigator.getUserMedia', 'Navigator.keyboard', 'Navigator.locks', 'Navigator.maxTouchPoints', 'Navigator.mediaCapabilities', 'Navigator.mediaDevices', 'Navigator.onLine', 'Navigator.permissions', 'Navigator.product', 'Navigator.serviceWorker', 'Navigator.unregisterProtocolHandler', 'Navigator.userAgent', 'Navigator.userAgentData', 'Navigator.vibrate', 'Navigator.webdriver', 'Navigator.webkitGetUserMedia', 'Navigator.webkitPersistentStorage', 'Navigator.webkitTemporaryStorage', 'Navigator.xr');
+			console.log(navigator_arr.length)
+			var nav_arr = fingerprint_navigator();
+			console.log(nav_arr)
+			document.write("</br>");
+			for (var i = 0; i < navigator_arr.length; i++){
+				document.write("#"+(i+1)+"-" + navigator_arr[i] + ":   					  ");
+				document.write(nav_arr[i]);
+				document.write("</br>");
+			}
+			document.write("</br>");
+		</script>
+	</section>
+
+	<section>
+		<h2>Window</h2>
+		<script src="windowfp.js"></script>
+		<script>
+			var window_arr = new Array();
+			window_arr.push('Window.applicationCache', 'Window.atob', 'Window.btoa', 'Window.clearInterval', 'Window.clearTimeout', 'Window.clientInformation', 'Window.closed', 'Window.crypto', 'Window.defaultstatus', 'Window.document', 'Window.event', 'Window.external', 'Window.fetch', 'Window.frames', 'Window.getComputedStyle', 'Window.history', 'Window.innerHeight', 'Window.innerWidth', 'Window.length', 'Window.location', 'Window.locationbar', 'Window.matchMedia', 'Window.name', 'Window.navigator', 'Window.onerror', 'Window.ontouchstart', 'Window.open', 'Window.opener', 'Window.orientation', 'Window.outerHeight', 'Window.outerWidth', 'Window.pageXOffset', 'Window.pageYOffset', 'Window.parent', 'Window.performance', 'Window.requestAnimationFrame', 'Window.requestIdleCallback', 'Window.screen', 'Window.screenLeft', 'Window.screenTop', 'Window.screenX', 'Window.screenY', 'Window.self', 'Window.setInterval', 'Window.setTimeout', 'Window.speechSynthesis', 'Window.top', 'Window.visualViewport', 'Window.webkitRequestFileSystem', 'Window.window');
+			console.log(window_arr.length)
+			var win_arr = fingerprint_window();
+			console.log(win_arr)
+			document.write("</br>");
+			for (var i = 0; i < window_arr.length; i++){
+				document.write("#"+(i+1)+"-" + window_arr[i] + ":   					  ");
+				document.write(win_arr[i]);
+				document.write("</br>");
+			}
+			document.write("</br>");
+		</script>
+	</section>
+
+	<section>
+		<h2>Battery</h2>
+		<script src="batteryfp.js"></script>
+		<div id="charging">(battery charging unknown)</div>
+		<div id="chargingTime">(battery chargingTime unknown)</div>
+		<div id="dischargingTime">(battery dischargingTime unknown)</div>
+		<div id="level">(battery level unknown)</div>
+		<script>
+			navigator.getBattery().then(function(battery) {
+
+				var charging = battery.charging;
+				var chargingTime = battery.chargingTime
+				var dischargingTime = battery.dischargingTime
+				var level = battery.level
+				document.querySelector('#charging').textContent = charging;
+				document.querySelector('#chargingTime').textContent = chargingTime;
+				document.querySelector('#dischargingTime').textContent = dischargingTime;
+				document.querySelector('#level').textContent = level;
+			});
+
+			
+
+			
+		</script>
+	</section>
+
+	<section>
+		<h2>Canvas</h2>
+		<canvas id="canvas1" width="500" height="500" style="border: 1px solid #000000;">
+		</canvas>
+		<canvas id="canvas2" width="500" height="500" style="border: 1px solid #000000;">
+		</canvas>
+		<canvas id="canvas3" width="500" height="500" style="border: 1px solid #000000;">
+		</canvas>
+		<script src="canvasfp.js"></script>
+		<script>
+			var canvas = document.getElementById('canvas1');
+			if (canvas.getContext) {
+				
+				var text = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`~1!2@3#4$5%6^7&8*9(0)-_=+[{]}|;:',<.>/?";
+				var hash = null;
+				var ctx = null;
+				ctx = canvas.getContext('2d');
+				ctx.textBaseline = "top";
+				ctx.font = "14px 'Arial'";
+				ctx.textBaseline = "alphabetic";
+				ctx.fillStyle = "#f60";
+				ctx.fillRect(125, 1, 62, 20);
+				ctx.fillStyle = "#069";
+				ctx.fillText(text, 2, 15);
+				ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+				ctx.fillText(text, 4, 17);
+
+				ctx.font = '50px serif';
+				ctx.strokeText('Hello world', 250, 350);
+
+
+				// First path
+				ctx.beginPath();
+				ctx.strokeStyle = 'blue';
+				ctx.moveTo(20, 20);
+				ctx.lineTo(200, 20);
+				ctx.stroke();
+
+				// Second path
+				ctx.beginPath();
+				ctx.strokeStyle = 'green';
+				ctx.moveTo(20, 20);
+				ctx.lineTo(120, 120);
+				ctx.stroke();
+			}
+			
+			var canvas = document.getElementById('canvas2');
+			if (canvas.getContext) {
+				var ctx = null;
+				ctx = canvas.getContext('2d');
+				// Define the points as {x, y}
+				let start = { x: 50,    y: 20  };
+				let cp1 =   { x: 230,   y: 30  };
+				let cp2 =   { x: 150,   y: 80  };
+				let end =   { x: 250,   y: 100 };
+
+				// Cubic Bézier curve
+				ctx.beginPath();
+				ctx.moveTo(start.x, start.y);
+				ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+				ctx.stroke();
+
+				// Start and end points
+				ctx.fillStyle = 'blue';
+				ctx.beginPath();
+				ctx.arc(start.x, start.y, 5, 0, 2 * Math.PI);  // Start point
+				ctx.arc(end.x, end.y, 5, 0, 2 * Math.PI);      // End point
+				ctx.fill();
+
+				// Control points
+				ctx.fillStyle = 'red';
+				ctx.beginPath();
+				ctx.arc(cp1.x, cp1.y, 5, 0, 2 * Math.PI);  // Control point one
+				ctx.arc(cp2.x, cp2.y, 5, 0, 2 * Math.PI);  // Control point two
+				ctx.fill();
+
+				// Draw yellow background
+				ctx.beginPath();
+				ctx.fillStyle = '#ff6';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+				// Draw blue triangle
+				ctx.beginPath();
+				ctx.fillStyle = 'blue';
+				ctx.moveTo(20, 20);
+				ctx.lineTo(180, 20);
+				ctx.lineTo(130, 130);
+				ctx.closePath();
+				ctx.fill();
+
+				// Clear part of the canvas
+				ctx.clearRect(300, 300, 120, 100);
+
+				// Create circular clipping region
+				ctx.beginPath();
+				ctx.arc(100, 75, 50, 0, Math.PI * 2);
+				ctx.clip();
+
+				// Draw stuff that gets clipped
+				ctx.fillStyle = 'blue';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				ctx.fillStyle = 'orange';
+				ctx.fillRect(0, 0, 100, 100);
+
+				// Draw the ellipse
+				ctx.beginPath();
+				ctx.ellipse(300, 300, 300, 300, Math.PI / 4, 0, 2 * Math.PI);
+				ctx.stroke();
+
+				// Draw the ellipse's line of reflection
+				ctx.beginPath();
+				ctx.setLineDash([5, 5]);
+				ctx.moveTo(0, 200);
+				ctx.lineTo(200, 0);
+				ctx.stroke();
+			}
+
+			var canvas = document.getElementById('canvas3');
+			if (canvas.getContext) {
+				var ctx = null;
+				ctx = canvas.getContext('2d');
+				// Create a linear gradient
+				// The start gradient point is at x=20, y=0
+				// The end gradient point is at x=220, y=0
+				var gradient = ctx.createLinearGradient(20,0, 220,0);
+
+				// Add three color stops
+				gradient.addColorStop(0, 'green');
+				gradient.addColorStop(.5, 'cyan');
+				gradient.addColorStop(1, 'green');
+
+				// Set the fill style and draw a rectangle
+				ctx.fillStyle = gradient;
+				ctx.fillRect(20, 20, 200, 100);
+
+				// Create a radial gradient
+				// The inner circle is at x=110, y=90, with radius=30
+				// The outer circle is at x=100, y=100, with radius=70
+				var gradient = ctx.createRadialGradient(110,90,30, 100,100,70);
+
+				// Add three color stops
+				gradient.addColorStop(0, 'pink');
+				gradient.addColorStop(.9, 'white');
+				gradient.addColorStop(1, 'green');
+
+				// Set the fill style and draw a rectangle
+				ctx.fillStyle = gradient;
+				ctx.fillRect(20, 20, 160, 160);
+
+				ctx.isPointInPath(30, 70);
+
+				let imageData = ctx.getImageData(60, 60, 200, 100);
+				ctx.putImageData(imageData, 150, 10);
+
+				let hello = ctx.measureText('Hello world');
+				console.log(hello.width);
+				console.log(hello.height);
+
+
+				// Quadratic Bézier curve
+				ctx.beginPath();
+				ctx.moveTo(50, 20);
+				ctx.quadraticCurveTo(230, 30, 50, 100);
+				ctx.stroke();
+
+				// Save the default state
+				ctx.save();
+				// Rectangle
+				ctx.fillStyle = 'green';
+				ctx.rect(400, 20, 150, 100);
+				ctx.fill();
+				// Restore the default state
+				ctx.restore();
+				ctx.fillRect(150, 40, 100, 100);
+
+
+				// Point of transform origin
+				ctx.arc(0, 0, 5, 0, 2 * Math.PI);
+				ctx.fillStyle = 'blue';
+				ctx.fill();
+
+				// Non-rotated rectangle
+				ctx.fillStyle = 'gray';
+				ctx.fillRect(200, 200, 200, 200);
+				ctx.translate(110, 30);
+
+				// Rotated rectangle
+				ctx.rotate(45 * Math.PI / 180);
+				ctx.fillStyle = 'red';
+				ctx.fillRect(200, 100, 150, 120);
+
+				// Reset transformation matrix to the identity matrix
+				ctx.setTransform(1, 0, 0, 1, 0, 0);
+			}
+
+		</script>
+	</section>
+
+	<section>
+		<h2>Device Movement</h2>
+		<body>
+			<a href="https://code.tutsplus.com/tutorials/an-introduction-to-the-device-orientation-api--cms-21067">Go back to the article</a>
+	  
+			<h1>Device Orientation API</h1>
+	  
+			<span id="do-unsupported" class="api-support hidden">deviceorientation event not supported</span>
+			<span id="dm-unsupported" class="api-support hidden">devicemotion event not supported</span>
+			<span id="cnc-unsupported" class="api-support hidden">compassneedscalibration event not supported</span>
+	  
+			<div id="do-results">
+			   <div id="cube" class="cube">
+				  <div class="face one">1</div>
+				  <div class="face two">2</div>
+				  <div class="face three">3</div>
+				  <div class="face four">4</div>
+				  <div class="face five">5</div>
+				  <div class="face six">6</div>
+			   </div>
+			   <div id="do-info" class="hidden">
+				  <p>
+					 Coordinates:
+					 (<span id="beta" class="value">null</span>,
+					 <span id="gamma" class="value">null</span>,
+					 <span id="alpha" class="value">null</span>)
+					 <br />
+					 Position absolute? <span id="is-absolute" class="value">unavailable</span>
+				  </p>
+			   </div>
+			   <div id="dm-info" class="hidden">
+				  <p>
+					 Acceleration:
+					 (<span id="acceleration-x" class="value">null</span>,
+					 <span id="acceleration-y" class="value">null</span>,
+					 <span id="acceleration-z" class="value">null</span>)
+					 m/s<sup>2</sup>
+				  </p>
+				  <p>
+					 Acceleration including gravity:
+					 (<span id="acceleration-including-gravity-x" class="value">null</span>,
+					 <span id="acceleration-including-gravity-y" class="value">null</span>,
+					 <span id="acceleration-including-gravity-z" class="value">null</span>)
+					 m/s<sup>2</sup>
+				  </p>
+				  <p>
+					 Rotation rate:
+					 (<span id="rotation-rate-beta" class="value">null</span>,
+					 <span id="rotation-rate-gamma" class="value">null</span>,
+					 <span id="rotation-rate-alpha" class="value">null</span>)
+				  </p>
+				  <p>
+					 Interval: <span id="interval" class="value">0</span> milliseconds
+				  </p>
+			   </div>
+			</div>
+	  
+			<small class="author">
+			   Demo created by <a href="https://www.audero.it">Aurelio De Rosa</a>
+			   (<a href="https://twitter.com/AurelioDeRosa">@AurelioDeRosa</a>).<br />
+			   This demo is part of the <a href="https://github.com/AurelioDeRosa/HTML5-API-demos">HTML5 API demos repository</a>.
+			</small>
+	  
+			<script>
+			   if (!('ondeviceorientation' in window)) {
+				  document.getElementById('do-unsupported').classList.remove('hidden');
+			   } else {
+				  document.getElementById('do-info').classList.remove('hidden');
+	  
+				  window.addEventListener('deviceorientation', function(event) {
+					 document.getElementById('cube').style.webkitTransform =
+					 document.getElementById('cube').style.transform =
+							 'rotateX(' + event.beta + 'deg) ' +
+							 'rotateY(' + event.gamma + 'deg) ' +
+							 'rotateZ(' + event.alpha + 'deg)';
+	  
+					 document.getElementById('beta').innerHTML = Math.round(event.beta);
+					 document.getElementById('gamma').innerHTML = Math.round(event.gamma);
+					 document.getElementById('alpha').innerHTML = Math.round(event.alpha);
+					 document.getElementById('is-absolute').innerHTML = event.absolute ? "true" : "false";
+				  });
+			   }
+	  
+			   if (!('ondevicemotion' in window)) {
+				  document.getElementById('dm-unsupported').classList.remove('hidden');
+			   } else {
+				  document.getElementById('dm-info').classList.remove('hidden');
+	  
+				  window.addEventListener('devicemotion', function(event) {
+					 document.getElementById('acceleration-x').innerHTML = Math.round(event.acceleration.x);
+					 document.getElementById('acceleration-y').innerHTML = Math.round(event.acceleration.y);
+					 document.getElementById('acceleration-z').innerHTML = Math.round(event.acceleration.z);
+	  
+					 document.getElementById('acceleration-including-gravity-x').innerHTML =
+							 Math.round(event.accelerationIncludingGravity.x);
+					 document.getElementById('acceleration-including-gravity-y').innerHTML =
+							 Math.round(event.accelerationIncludingGravity.y);
+					 document.getElementById('acceleration-including-gravity-z').innerHTML =
+							 Math.round(event.accelerationIncludingGravity.z);
+	  
+					 document.getElementById('rotation-rate-beta').innerHTML = Math.round(event.rotationRate.beta);
+					 document.getElementById('rotation-rate-gamma').innerHTML = Math.round(event.rotationRate.gamma);
+					 document.getElementById('rotation-rate-alpha').innerHTML = Math.round(event.rotationRate.alpha);
+	  
+					 document.getElementById('interval').innerHTML = event.interval;
+				  });
+			   }
+	  
+			   if (!('oncompassneedscalibration' in window)) {
+				  document.getElementById('cnc-unsupported').classList.remove('hidden');
+			   } else {
+				  window.addEventListener('compassneedscalibration', function(event) {
+					 alert('Compass needs calibrating! Wave your device in a figure-eight motion');
+				  });
+			   }
+			</script>
+		 </body>
+			
+		</script>
+	</section>
+
+	<section>
+		<h2>WebGL</h2>
+		<canvas id="webgl" width="500" height="500"></canvas>
+		<script src="webglfp.js"></script>
+		<script>
+			var canvas = document.getElementById('webgl');
+			var gl = null;
+			gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+			
+			var fa2s = function (fa) {
+				gl.clearColor(0.0, 0.0, 0.0, 1.0)
+				gl.enable(gl.DEPTH_TEST)
+				gl.depthFunc(gl.LEQUAL)
+				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+				return '[' + fa[0] + ', ' + fa[1] + ']'
+			}
+			var maxAnisotropy = function (gl) {
+				var ext = gl.getExtension('EXT_texture_filter_anisotropic') || gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic') || gl.getExtension('MOZ_EXT_texture_filter_anisotropic')
+				if (ext) {
+					var anisotropy = gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT)
+					if (anisotropy === 0) {
+					anisotropy = 2
+					}
+					return anisotropy
+				} else {
+					return null
+				}
+			}
+		
+			if (gl) { 
+				// WebGL fingerprinting is a combination of techniques, found in MaxMind antifraud script & Augur fingerprinting.
+				// First it draws a gradient object with shaders and convers the image to the Base64 string.
+				// Then it enumerates all WebGL extensions & capabilities and appends them to the Base64 string, resulting in a huge WebGL string, potentially very unique on each device
+				// Since iOS supports webgl starting from version 8.1 and 8.1 runs on several graphics chips, the results may be different across ios devices, but we need to verify it.
+				var result = []
+				var vShaderTemplate = 'attribute vec2 attrVertex;varying vec2 varyinTexCoordinate;uniform vec2 uniformOffset;void main(){varyinTexCoordinate=attrVertex+uniformOffset;gl_Position=vec4(attrVertex,0,1);}'
+				var fShaderTemplate = 'precision mediump float;varying vec2 varyinTexCoordinate;void main() {gl_FragColor=vec4(varyinTexCoordinate,0,1);}'
+				var vertexPosBuffer = gl.createBuffer()
+				gl.bindBuffer(gl.ARRAY_BUFFER, vertexPosBuffer)
+				var vertices = new Float32Array([-0.2, -0.9, 0, 0.4, -0.26, 0, 0, 0.732134444, 0])
+				gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+				vertexPosBuffer.itemSize = 3
+				vertexPosBuffer.numItems = 3
+				var program = gl.createProgram()
+				var vshader = gl.createShader(gl.VERTEX_SHADER)
+				gl.shaderSource(vshader, vShaderTemplate)
+				gl.compileShader(vshader)
+				var fshader = gl.createShader(gl.FRAGMENT_SHADER)
+				gl.shaderSource(fshader, fShaderTemplate)
+				gl.compileShader(fshader)
+				gl.attachShader(program, vshader)
+				gl.attachShader(program, fshader)
+				gl.linkProgram(program)
+				gl.useProgram(program)
+				program.vertexPosAttrib = gl.getAttribLocation(program, 'attrVertex')
+				program.offsetUniform = gl.getUniformLocation(program, 'uniformOffset')
+				gl.enableVertexAttribArray(program.vertexPosArray)
+				gl.vertexAttribPointer(program.vertexPosAttrib, vertexPosBuffer.itemSize, gl.FLOAT, !1, 0, 0)
+				gl.uniform2f(program.offsetUniform, 1, 1)
+				gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexPosBuffer.numItems)
+				try {
+				result.push(gl.canvas.toDataURL())
+				} catch (e) {
+					/* .toDataURL may be absent or broken (blocked by extension) */
+				}
+				result.push('extensions:' + (gl.getSupportedExtensions() || []).join(';'))
+				result.push('webgl aliased line width range:' + fa2s(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE)))
+				result.push('webgl aliased point size range:' + fa2s(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)))
+				result.push('webgl alpha bits:' + gl.getParameter(gl.ALPHA_BITS))
+				result.push('webgl antialiasing:' + (gl.getContextAttributes().antialias ? 'yes' : 'no'))
+				result.push('webgl blue bits:' + gl.getParameter(gl.BLUE_BITS))
+				result.push('webgl depth bits:' + gl.getParameter(gl.DEPTH_BITS))
+				result.push('webgl green bits:' + gl.getParameter(gl.GREEN_BITS))
+				result.push('webgl max anisotropy:' + maxAnisotropy(gl))
+				result.push('webgl max combined texture image units:' + gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS))
+				result.push('webgl max cube map texture size:' + gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE))
+				result.push('webgl max fragment uniform vectors:' + gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS))
+				result.push('webgl max render buffer size:' + gl.getParameter(gl.MAX_RENDERBUFFER_SIZE))
+				result.push('webgl max texture image units:' + gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS))
+				result.push('webgl max texture size:' + gl.getParameter(gl.MAX_TEXTURE_SIZE))
+				result.push('webgl max varying vectors:' + gl.getParameter(gl.MAX_VARYING_VECTORS))
+				result.push('webgl max vertex attribs:' + gl.getParameter(gl.MAX_VERTEX_ATTRIBS))
+				result.push('webgl max vertex texture image units:' + gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS))
+				result.push('webgl max vertex uniform vectors:' + gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS))
+				result.push('webgl max viewport dims:' + fa2s(gl.getParameter(gl.MAX_VIEWPORT_DIMS)))
+				result.push('webgl red bits:' + gl.getParameter(gl.RED_BITS))
+				result.push('webgl renderer:' + gl.getParameter(gl.RENDERER))
+				result.push('webgl shading language version:' + gl.getParameter(gl.SHADING_LANGUAGE_VERSION))
+				result.push('webgl stencil bits:' + gl.getParameter(gl.STENCIL_BITS))
+				result.push('webgl vendor:' + gl.getParameter(gl.VENDOR))
+				result.push('webgl version:' + gl.getParameter(gl.VERSION))
+			}
+			try {
+				// Add the unmasked vendor and unmasked renderer if the debug_renderer_info extension is available
+			var extensionDebugRendererInfo = gl.getExtension('WEBGL_debug_renderer_info')
+			if (extensionDebugRendererInfo) {
+				result.push('webgl unmasked vendor:' + gl.getParameter(extensionDebugRendererInfo.UNMASKED_VENDOR_WEBGL))
+				result.push('webgl unmasked renderer:' + gl.getParameter(extensionDebugRendererInfo.UNMASKED_RENDERER_WEBGL))
+			}
+			} catch (e) { /* squelch */ }
+		
+			if (!gl.getShaderPrecisionFormat) {
+				console.log(result) 
+			}
+		
+			each(['FLOAT', 'INT'], function (numType) {
+			each(['VERTEX', 'FRAGMENT'], function (shader) {
+				each(['HIGH', 'MEDIUM', 'LOW'], function (numSize) {
+				each(['precision', 'rangeMin', 'rangeMax'], function (key) {
+					var format = gl.getShaderPrecisionFormat(gl[shader + '_SHADER'], gl[numSize + '_' + numType])[key]
+					if (key !== 'precision') {
+					key = 'precision ' + key
+					}
+					var line = ['webgl ', shader.toLowerCase(), ' shader ', numSize.toLowerCase(), ' ', numType.toLowerCase(), ' ', key, ':', format].join('')
+					result.push(line)
+				})
+				})
+			})
+			})
+			console.log(result)
+			for (var i = 0; i < result.length; i++){
+				document.write("#"+(i+1)+"-" + result[i] + ":   					  ");
+				document.write("</br>");
+			}
+
+			var extensionDebugRendererInfo = gl.getExtension('WEBGL_debug_renderer_info')
+			document.write("#"+(result.length+1)+"-" + gl.getParameter(extensionDebugRendererInfo.UNMASKED_VENDOR_WEBGL) + ":   					  ");
+			document.write("</br>"); 
+			document.write("#"+(result.length+2)+"-" + gl.getParameter(extensionDebugRendererInfo.UNMASKED_RENDERER_WEBGL) + ":   					  ");
+			document.write("</br>");
+			
+		</script>
+	</section>
+
+	<section>
+		<h2>WebGL2</h2>
+		<canvas id="webgl2" width="500" height="500"></canvas>
+		<script src="webglfp.js"></script>
+		<script>
+			var canvas = document.getElementById('webgl2');
+			var gl = null;
+			gl = canvas.getContext('webgl2');
+			
+			var fa2s = function (fa) {
+				gl.clearColor(0.0, 0.0, 0.0, 1.0)
+				gl.enable(gl.DEPTH_TEST)
+				gl.depthFunc(gl.LEQUAL)
+				gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+				return '[' + fa[0] + ', ' + fa[1] + ']'
+			}
+			var maxAnisotropy = function (gl) {
+				var ext = gl.getExtension('EXT_texture_filter_anisotropic') || gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic') || gl.getExtension('MOZ_EXT_texture_filter_anisotropic')
+				if (ext) {
+					var anisotropy = gl.getParameter(ext.MAX_TEXTURE_MAX_ANISOTROPY_EXT)
+					if (anisotropy === 0) {
+					anisotropy = 2
+					}
+					return anisotropy
+				} else {
+					return null
+				}
+			}
+		
+			if (gl) { 
+				// WebGL fingerprinting is a combination of techniques, found in MaxMind antifraud script & Augur fingerprinting.
+				// First it draws a gradient object with shaders and convers the image to the Base64 string.
+				// Then it enumerates all WebGL extensions & capabilities and appends them to the Base64 string, resulting in a huge WebGL string, potentially very unique on each device
+				// Since iOS supports webgl starting from version 8.1 and 8.1 runs on several graphics chips, the results may be different across ios devices, but we need to verify it.
+				var result = []
+				var vShaderTemplate = 'attribute vec2 attrVertex;varying vec2 varyinTexCoordinate;uniform vec2 uniformOffset;void main(){varyinTexCoordinate=attrVertex+uniformOffset;gl_Position=vec4(attrVertex,0,1);}'
+				var fShaderTemplate = 'precision mediump float;varying vec2 varyinTexCoordinate;void main() {gl_FragColor=vec4(varyinTexCoordinate,0,1);}'
+				var vertexPosBuffer = gl.createBuffer()
+				gl.bindBuffer(gl.ARRAY_BUFFER, vertexPosBuffer)
+				var vertices = new Float32Array([-0.2, -0.9, 0, 0.4, -0.26, 0, 0, 0.732134444, 0])
+				gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
+				vertexPosBuffer.itemSize = 3
+				vertexPosBuffer.numItems = 3
+				var program = gl.createProgram()
+				var vshader = gl.createShader(gl.VERTEX_SHADER)
+				gl.shaderSource(vshader, vShaderTemplate)
+				gl.compileShader(vshader)
+				var fshader = gl.createShader(gl.FRAGMENT_SHADER)
+				gl.shaderSource(fshader, fShaderTemplate)
+				gl.compileShader(fshader)
+				gl.attachShader(program, vshader)
+				gl.attachShader(program, fshader)
+				gl.linkProgram(program)
+				gl.useProgram(program)
+				program.vertexPosAttrib = gl.getAttribLocation(program, 'attrVertex')
+				program.offsetUniform = gl.getUniformLocation(program, 'uniformOffset')
+				gl.enableVertexAttribArray(program.vertexPosArray)
+				gl.vertexAttribPointer(program.vertexPosAttrib, vertexPosBuffer.itemSize, gl.FLOAT, !1, 0, 0)
+				gl.uniform2f(program.offsetUniform, 1, 1)
+				gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexPosBuffer.numItems)
+				try {
+				result.push(gl.canvas.toDataURL())
+				} catch (e) {
+					/* .toDataURL may be absent or broken (blocked by extension) */
+				}
+				result.push('extensions:' + (gl.getSupportedExtensions() || []).join(';'))
+				result.push('webgl aliased line width range:' + fa2s(gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE)))
+				result.push('webgl aliased point size range:' + fa2s(gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE)))
+				result.push('webgl alpha bits:' + gl.getParameter(gl.ALPHA_BITS))
+				result.push('webgl antialiasing:' + (gl.getContextAttributes().antialias ? 'yes' : 'no'))
+				result.push('webgl blue bits:' + gl.getParameter(gl.BLUE_BITS))
+				result.push('webgl depth bits:' + gl.getParameter(gl.DEPTH_BITS))
+				result.push('webgl green bits:' + gl.getParameter(gl.GREEN_BITS))
+				result.push('webgl max anisotropy:' + maxAnisotropy(gl))
+				result.push('webgl max combined texture image units:' + gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS))
+				result.push('webgl max cube map texture size:' + gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE))
+				result.push('webgl max fragment uniform vectors:' + gl.getParameter(gl.MAX_FRAGMENT_UNIFORM_VECTORS))
+				result.push('webgl max render buffer size:' + gl.getParameter(gl.MAX_RENDERBUFFER_SIZE))
+				result.push('webgl max texture image units:' + gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS))
+				result.push('webgl max texture size:' + gl.getParameter(gl.MAX_TEXTURE_SIZE))
+				result.push('webgl max varying vectors:' + gl.getParameter(gl.MAX_VARYING_VECTORS))
+				result.push('webgl max vertex attribs:' + gl.getParameter(gl.MAX_VERTEX_ATTRIBS))
+				result.push('webgl max vertex texture image units:' + gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS))
+				result.push('webgl max vertex uniform vectors:' + gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS))
+				result.push('webgl max viewport dims:' + fa2s(gl.getParameter(gl.MAX_VIEWPORT_DIMS)))
+				result.push('webgl red bits:' + gl.getParameter(gl.RED_BITS))
+				result.push('webgl renderer:' + gl.getParameter(gl.RENDERER))
+				result.push('webgl shading language version:' + gl.getParameter(gl.SHADING_LANGUAGE_VERSION))
+				result.push('webgl stencil bits:' + gl.getParameter(gl.STENCIL_BITS))
+				result.push('webgl vendor:' + gl.getParameter(gl.VENDOR))
+				result.push('webgl version:' + gl.getParameter(gl.VERSION))
+			}
+			try {
+				// Add the unmasked vendor and unmasked renderer if the debug_renderer_info extension is available
+			var extensionDebugRendererInfo = gl.getExtension('WEBGL_debug_renderer_info')
+			if (extensionDebugRendererInfo) {
+				result.push('webgl unmasked vendor:' + gl.getParameter(extensionDebugRendererInfo.UNMASKED_VENDOR_WEBGL))
+				result.push('webgl unmasked renderer:' + gl.getParameter(extensionDebugRendererInfo.UNMASKED_RENDERER_WEBGL))
+			}
+			} catch (e) { /* squelch */ }
+		
+			if (!gl.getShaderPrecisionFormat) {
+				console.log(result) 
+			}
+		
+			each(['FLOAT', 'INT'], function (numType) {
+			each(['VERTEX', 'FRAGMENT'], function (shader) {
+				each(['HIGH', 'MEDIUM', 'LOW'], function (numSize) {
+				each(['precision', 'rangeMin', 'rangeMax'], function (key) {
+					var format = gl.getShaderPrecisionFormat(gl[shader + '_SHADER'], gl[numSize + '_' + numType])[key]
+					if (key !== 'precision') {
+					key = 'precision ' + key
+					}
+					var line = ['webgl ', shader.toLowerCase(), ' shader ', numSize.toLowerCase(), ' ', numType.toLowerCase(), ' ', key, ':', format].join('')
+					result.push(line)
+				})
+				})
+			})
+			})
+			console.log(result)
+			for (var i = 0; i < result.length; i++){
+				document.write("#"+(i+1)+"-" + result[i] + ":   					  ");
+				document.write("</br>");
+			}
+
+			var extensionDebugRendererInfo = gl.getExtension('WEBGL_debug_renderer_info')
+			document.write("#"+(result.length+1)+"-" + gl.getParameter(extensionDebugRendererInfo.UNMASKED_VENDOR_WEBGL) + ":   					  ");
+			document.write("</br>"); 
+			document.write("#"+(result.length+2)+"-" + gl.getParameter(extensionDebugRendererInfo.UNMASKED_RENDERER_WEBGL) + ":   					  ");
+			document.write("</br>");
+			
+		</script>
+	</section>
+
+
+	<section>
+		<h2>Mediadevice</h2>
+		<script src="mediafp.js"></script>
+		<script>
+			var media = navigator.mediaDevices;
+			var media_arr = new Array();
+			var med_arr = new Array();
+			media_arr.push('MediaDevices.enumerateDevices', 'MediaDevices.getDisplayMedia', 'MediaDevices.getSupportedConstraints', 'MediaDevices.getUserMedia', 'MediaDevices.ondevicechange')
+			navigator.mediaDevices.enumerateDevices()
+			.then(function(devices) {
+			devices.forEach(function(device) {
+				console.log(device.kind + ": " + device.label +
+							" id = " + device.deviceId);
+			});
+			})
+			med_arr.push(media.enumerateDevices,
+				media.getDisplayMedia,
+				media.getSupportedConstraints,
+				media.getUserMedia,
+				media.ondevicechange);
+			for (var i = 0; i < media_arr.length; i++){
+				document.write("#"+(i+1)+"-" + media_arr[i] + ":   					  ");
+				document.write(med_arr[i]);
+				document.write("</br>");
+			}
+			document.write("</br>");
+		</script>
+	</section>
+
+	<section>
+		<h2>Networkinfo</h2>
+		<script src="networkfp.js"></script>
+		<script>
+			var network_arr = new Array();
+			network_arr.push('NetworkInformation.downlink', 'NetworkInformation.effectiveType', 'NetworkInformation.rtt', 'NetworkInformation.saveData', 'NetworkInformation.type')
+			console.log(network_arr.length)
+			var net_arr = fingerprint_network();
+			console.log(net_arr)
+			document.write("</br>");
+			for (var i = 0; i < network_arr.length; i++){
+				document.write("#"+(i+1)+"-" + network_arr[i] + ":   					  ");
+				document.write(net_arr[i]);
+				document.write("</br>");
+			}
+			document.write("</br>");
+			
+		</script>
+	</section>
+
+	<section>
+		<h2>Performance</h2>
+		<script src="performancefp.js"></script>
+		<script>
+			window.performance;
+		</script>
+	</section>
+
+	<section>
+		<h2>Seed</h2>
+		<script src="seedfp.js"></script>
+		<script>
+			var seed_arr = new Array();
+			seed_arr.push("Navigator.languages","Navigator.appName","Navigator.mimeTypes","Navigator.doNotTrack","Navigator.hardwareConcurrency","Navigator.getBattery","Navigator.javaEnabled","Navigator.platform","Navigator.language","Navigator.cookieEnabled","Navigator.plugins","Navigator.productSub","Navigator.vendorSub","Navigator.appCodeName","Navigator.vendor","Screen.height","Screen.pixelDepth","Screen.colorDepth","Screen.width","Screen.orientation","Window.devicePixelRatio");
+			console.log(seed_arr.length)
+			var sed_arr = fingerprint_seed();
+			console.log(sed_arr)
+			document.write("</br>");
+			for (var i = 0; i < seed_arr.length; i++){
+				document.write("#"+(i+1)+"-" + seed_arr[i] + ":   					  ");
+				document.write(sed_arr[i]);
+				document.write("</br>");
+			}
+			document.write("</br>");
+		</script>
+	</section>
+
+	<section>
+		<h2>Sensitive</h2>
+		<script src="sstvfp.js"></script>
+		<script>
+			var geolocation_arr = new Array();
+			geolocation_arr.push('Geolocation.clearWatch', 'Geolocation.getCurrentPosition', 'Geolocation.watchPosition')
+			console.log(geolocation_arr.length)
+			var geo_arr = fingerprint_sensitive();
+			console.log(geo_arr)
+			document.write("</br>");
+			for (var i = 0; i < geolocation_arr.length; i++){
+				document.write("#"+(i+1)+"-" + geolocation_arr[i] + ":   					  ");
+				if (geo_arr){
+					document.write(geo_arr[i]);
+				}
+				document.write("</br>");
+			}
+			document.write("</br>");
+			
+		</script>
+	</section>
+
+	<section>
+		<h2>Video and TimeRanges</h2>
+		<script src="sstvfp.js"></script>
+		<video controls></video>
+		<script>
+		var video = document.querySelector('video');
+
+		var assetURL = 'https://nickdesaulniers.github.io/netfix/demo/frag_bunny.mp4';
+		// Need to be specific for Blink regarding codecs
+		// ./mp4info frag_bunny.mp4 | grep Codec
+		var mimeCodec = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+
+		if ('MediaSource' in window && MediaSource.isTypeSupported(mimeCodec)) {
+			var mediaSource = new MediaSource;
+			//console.log(mediaSource.readyState); // closed
+			video.src = URL.createObjectURL(mediaSource);
+			mediaSource.addEventListener('sourceopen', sourceOpen);
+		} else {
+			console.error('Unsupported MIME type or codec: ', mimeCodec);
+		}
+
+		for (var n = 0; n < video.buffered.length; n++) {
+			var i = video.buffered.start(n),
+				e = video.buffered.end(n);
+			console.log("start: "+i)
+			console.log("end: "+e)
+		}
+		var buf = video.buffered;
+
+		var numRanges = buf.length;
+		console.log("TimeRanges: "+numRanges)
+		console.log("start: "+buf.start(0))
+		console.log("end: "+buf.end(0))
+		console.log("duration: "+v.duration)
+
+		if (buf.length == 1) {
+		// only one range
+		if (buf.start(0) == 0 && buf.end(0) == v.duration) {
+			// The one range starts at the beginning and ends at
+			// the end of the video, so the whole thing is loaded
+			console.log("Start OR End")
+		}
+		}
+
+		function sourceOpen (_) {
+			//console.log(this.readyState); // open
+			var mediaSource = this;
+			var sourceBuffer = mediaSource.addSourceBuffer(mimeCodec);
+			fetchAB(assetURL, function (buf) {
+			sourceBuffer.addEventListener('updateend', function (_) {
+				mediaSource.endOfStream();
+				video.play();
+				//console.log(mediaSource.readyState); // ended
+			});
+			sourceBuffer.appendBuffer(buf);
+			});
+		};
+
+		function fetchAB (url, cb) {
+			console.log(url);
+			var xhr = new XMLHttpRequest;
+			xhr.open('get', url);
+			xhr.responseType = 'arraybuffer';
+			xhr.onload = function () {
+			cb(xhr.response);
+			};
+			xhr.send();
+		};
+		</script>
+	</section>
+
+</body>
+</html>
